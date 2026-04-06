@@ -81,3 +81,6 @@ build/
 .env
 .env.local
 .env.*.local
+
+# Logs (generic)
+*.log
