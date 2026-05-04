@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: spacedc-postgres
+    environment:
+      POSTGRES_USER: spacedc
+      POSTGRES_PASSWORD: spacedc_dev
+      POSTGRES_DB: spacedc
+    # Host 5433 avoids clashing with a local PostgreSQL install on 5432 (which would not have the spacedc role).
+    ports:
+      - "5433:5432"
+    # PostgreSQL 18+ images expect the volume on /var/lib/postgresql (not .../data). See docker-library/postgres#1259.
+    volumes:
+      - spacedc_pgdata_v18:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U spacedc -d spacedc"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  spacedc_pgdata_v18:
